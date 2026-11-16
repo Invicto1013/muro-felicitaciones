@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Muro de Felicitaciones</title>
+<meta name="description" content="Deja un mensaje de cumpleaños o pídele al generador unas palabras alegres.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<div class="bunting" aria-hidden="true"><svg id="bunting" viewBox="0 0 1200 64" preserveAspectRatio="xMidYMin slice"></svg></div>
+
+<div class="wrap">
+  <section class="owner" id="ownerBox" hidden>
+    <div class="field">
+      <label for="nameInput">Nombre del cumpleañero</label>
+      <input type="text" id="nameInput" maxlength="40" placeholder="Escribe el nombre aquí">
+      <p class="hint">Solo ves este espacio como organizador. El nombre aparece en el título y en los mensajes del generador.</p>
+    </div>
+    <div class="row">
+      <button class="btn primary" id="nameSave" type="button">Guardar nombre</button>
+      <button class="btn" id="ownerExit" type="button">Salir del modo organizador</button>
+    </div>
+  </section>
+
+  <header>
+    <p class="eyebrow">Libro de felicitaciones</p>
+    <h1 id="title">¡Feliz cumpleaños!</h1>
+    <p class="lead">Deja un mensaje bonito para que lo lea hoy y lo guarde. Si no encuentras las palabras, el generador te regala unas.</p>
+  </header>
+
+  <div class="duo">
+    <section class="card gen" aria-labelledby="genTitle">
+      <h2 id="genTitle">Generador de mensajes alegres</h2>
+      <p class="gen-text" id="genText" aria-live="polite"></p>
+      <div class="row">
+        <button class="btn primary" id="genNext" type="button">Otro mensaje</button>
+        <button class="btn" id="genCopy" type="button">Copiar</button>
+        <button class="btn" id="genUse" type="button">Usar en mi mensaje</button>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="formTitle">
+      <h2 id="formTitle">Escribe tu mensaje</h2>
+      <form id="form" class="stack" novalidate>
+        <div class="field">
+          <label for="authorInput">Tu nombre</label>
+          <input type="text" id="authorInput" maxlength="40" autocomplete="name" placeholder="Cómo quieres firmar">
+        </div>
+        <div class="field">
+          <label for="textInput">Tu mensaje</label>
+          <textarea id="textInput" maxlength="400" placeholder="Escribe aquí tus mejores deseos"></textarea>
+          <span class="counter" id="counter">0 / 400</span>
+        </div>
+        <div class="row">
+          <button class="btn primary" id="submitBtn" type="submit">Publicar mensaje</button>
+        </div>
+        <p class="status" id="status" role="status"></p>
+      </form>
+    </section>
+  </div>
+
+  <section class="stack" aria-labelledby="wallTitle">
+    <div class="wall-head">
+      <h2 id="wallTitle">Mensajes para hoy</h2>
+      <span class="count" id="count"></span>
+    </div>
+    <div class="wall" id="wall">
+      <div class="empty" id="wallEmpty">Cargando mensajes…</div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <button class="linkbtn" id="adminToggle" type="button">Soy el organizador</button>
+    <form id="adminForm" class="adminform" hidden novalidate>
+      <label for="adminKeyInput" class="sr">Clave de organizador</label>
+      <input type="password" id="adminKeyInput" autocomplete="current-password" placeholder="Clave de organizador">
+      <button class="btn small primary" type="submit">Entrar</button>
+    </form>
+    <p class="status" id="adminStatus" role="status"></p>
+  </footer>
+</div>
+
+<script src="/app.js" defer></script>
+</body>
+</html>

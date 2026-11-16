@@ -1,0 +1,124 @@
+/* Layout: banderines arriba, titular, luego dos tarjetas (generador + formulario) y debajo el muro de mensajes. */
+:root {
+  --bg: #F4F2FF;
+  --surface: #FFFFFF;
+  --fg: #1F1B3D;
+  --muted: #5B5780;
+  --line: #D9D5F1;
+  --accent: #D81E5B;
+  --accent-ink: #FFFFFF;
+  --sun: #FFC83D;
+  --mint: #1FB5A3;
+  --violet: #7B5CE0;
+  --tint-gen: #FFF0C2;
+  --t1: #FFE1EA;
+  --t2: #FFF1C7;
+  --t3: #D3F3EC;
+  --t4: #E4DEFF;
+  --font-display: "Fredoka", "Trebuchet MS", system-ui, sans-serif;
+  --font-body: "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #16132E; --surface: #211D42; --fg: #F1EEFF; --muted: #AAA5D3; --line: #3A3566;
+    --accent: #FF6B97; --accent-ink: #16132E; --sun: #FFD25E; --mint: #3FD0BD; --violet: #A38BFF;
+    --tint-gen: #3A3320; --t1: #3C2140; --t2: #3A3320; --t3: #1C3A3A; --t4: #2D2A5C;
+    color-scheme: dark;
+  }
+}
+
+* { box-sizing: border-box; }
+html { background: var(--bg); }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+  padding-block: 0 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+[hidden] { display: none !important; }
+.wrap { max-width: 1040px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px; }
+.stack { display: flex; flex-direction: column; gap: 14px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Banderines */
+.bunting { margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px))); height: 64px; overflow: hidden; }
+.bunting svg { display: block; width: 100%; height: 64px; }
+.bunting .string { fill: none; stroke: var(--muted); stroke-width: 1.5; }
+.f-a { fill: var(--accent); } .f-b { fill: var(--sun); } .f-c { fill: var(--mint); } .f-d { fill: var(--violet); }
+
+/* Cabecera */
+header { display: flex; flex-direction: column; gap: 10px; }
+.eyebrow { font-weight: 700; font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin: 0; }
+h1 {
+  font-family: var(--font-display); font-weight: 600;
+  font-size: clamp(2.2rem, 8vw, 4.4rem); line-height: 1.05; margin: 0;
+  text-wrap: balance; overflow-wrap: anywhere;
+}
+h1 .hl { color: var(--accent); }
+.lead { margin: 0; max-width: 56ch; color: var(--muted); font-size: 1.05rem; }
+
+/* Dos tarjetas */
+.duo { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 20px; align-items: stretch; }
+.duo > * { min-width: 0; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 22px; display: flex; flex-direction: column; gap: 14px; }
+.card.gen { background: var(--tint-gen); border-color: transparent; }
+h2 { font-family: var(--font-display); font-weight: 600; font-size: 1.35rem; margin: 0; }
+.hint { margin: 0; color: var(--muted); font-size: 0.92rem; }
+.gen-text {
+  font-family: var(--font-display); font-weight: 500; font-size: clamp(1.2rem, 4.4vw, 1.5rem);
+  line-height: 1.35; margin: 0; flex: 1; min-height: 7.5em; overflow-wrap: anywhere;
+}
+.row { display: flex; flex-wrap: wrap; gap: 10px; }
+
+button, input, textarea { font: inherit; color: inherit; }
+.btn {
+  border: 2px solid var(--fg); background: transparent; color: var(--fg);
+  border-radius: 999px; padding: 9px 18px; font-weight: 700; cursor: pointer;
+}
+.btn:hover { background: color-mix(in srgb, var(--fg) 10%, transparent); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.primary:hover { filter: brightness(1.08); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn.small { padding: 4px 12px; font-size: 0.82rem; border-width: 1.5px; }
+:focus-visible { outline: 3px solid var(--violet); outline-offset: 2px; }
+
+label { font-weight: 700; font-size: 0.9rem; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+input[type="text"], input[type="password"], textarea {
+  width: 100%; background: var(--bg); border: 1.5px solid var(--line); border-radius: 12px; padding: 10px 12px;
+}
+textarea { min-height: 130px; resize: vertical; }
+.counter { align-self: flex-end; font-size: 0.8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.status { min-height: 1.4em; margin: 0; font-size: 0.92rem; color: var(--muted); }
+
+/* Organizador */
+.owner { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; background: var(--surface); border: 1px dashed var(--line); border-radius: 14px; padding: 14px; }
+.owner .field { flex: 1 1 260px; }
+
+/* Muro */
+.wall-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; }
+.count { color: var(--muted); font-weight: 700; font-variant-numeric: tabular-nums; }
+.wall { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); gap: 16px; align-items: start; }
+.msg { border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.msg p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.msg footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 0.85rem; }
+.msg .who { font-weight: 700; overflow-wrap: anywhere; }
+.msg .when { color: var(--muted); }
+.t-0 { background: var(--t1); } .t-1 { background: var(--t2); } .t-2 { background: var(--t3); } .t-3 { background: var(--t4); }
+.empty { grid-column: 1 / -1; border: 2px dashed var(--line); border-radius: 16px; padding: 28px 18px; text-align: center; color: var(--muted); }
+
+/* Pie */
+.foot { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: center; color: var(--muted); font-size: 0.85rem; }
+.linkbtn { background: none; border: 0; padding: 4px 2px; color: var(--muted); text-decoration: underline; cursor: pointer; font: inherit; }
+.adminform { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.adminform input { width: 220px; max-width: 100%; }
+.foot .status { flex-basis: 100%; text-align: center; min-height: 0; }
+
+.bit { position: fixed; width: 9px; height: 14px; border-radius: 2px; pointer-events: none; z-index: 50; }
+@media (prefers-reduced-motion: reduce) { .bit { display: none; } }
