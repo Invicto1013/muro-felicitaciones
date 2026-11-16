@@ -1,0 +1,27 @@
+databases:
+  - name: muro-felicitaciones-db
+    plan: free
+    region: virginia
+    databaseName: muro_felicitaciones_db
+    user: muro_felicitaciones_db_user
+    postgresMajorVersion: "16"
+
+services:
+  - type: web
+    name: muro-felicitaciones
+    runtime: node
+    plan: free
+    region: virginia
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /healthz
+    autoDeployTrigger: commit
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: muro-felicitaciones-db
+          property: connectionString
+      - key: ADMIN_KEY
+        sync: false
+      - key: NODE_VERSION
+        value: "22"
