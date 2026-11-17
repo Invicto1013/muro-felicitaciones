@@ -15,23 +15,67 @@
 <div class="bunting" aria-hidden="true"><svg id="bunting" viewBox="0 0 1200 64" preserveAspectRatio="xMidYMin slice"></svg></div>
 
 <div class="wrap">
-  <section class="owner" id="ownerBox" hidden>
+  <div class="topbar">
+    <button class="linkbtn" id="adminToggle" type="button">Personalizar (organizador)</button>
+    <form id="adminForm" class="adminform" hidden novalidate>
+      <label for="adminKeyInput" class="sr">Clave de organizador</label>
+      <input type="password" id="adminKeyInput" autocomplete="current-password" placeholder="Clave de organizador">
+      <button class="btn small primary" type="submit">Entrar</button>
+    </form>
+    <p class="status" id="adminStatus" role="status"></p>
+  </div>
+
+  <section class="owner" id="ownerBox" hidden aria-labelledby="ownerTitle">
+    <h2 id="ownerTitle">Panel del organizador</h2>
     <div class="field">
       <label for="nameInput">Nombre del cumpleañero</label>
       <input type="text" id="nameInput" maxlength="40" placeholder="Escribe el nombre aquí">
-      <p class="hint">Solo ves este espacio como organizador. El nombre aparece en el título y en los mensajes del generador.</p>
+      <p class="hint">Aparece en el título, sobre el pastel y en los mensajes del generador.</p>
+    </div>
+    <div class="ctl-grid">
+      <div class="field">
+        <label for="candlesInput">Velas</label>
+        <div class="stepper">
+          <button type="button" id="candlesMinus" aria-label="Quitar una vela">−</button>
+          <input type="number" id="candlesInput" min="0" max="50" inputmode="numeric">
+          <button type="button" id="candlesPlus" aria-label="Agregar una vela">+</button>
+        </div>
+      </div>
+      <div class="field">
+        <span class="lbl" id="tiersLbl">Pisos</span>
+        <div class="seg" id="tiersSeg" role="group" aria-labelledby="tiersLbl"></div>
+      </div>
+      <div class="field">
+        <span class="lbl" id="spongeLbl">Bizcocho</span>
+        <div class="swatches" id="spongeSw" role="group" aria-labelledby="spongeLbl"></div>
+      </div>
+      <div class="field">
+        <span class="lbl" id="frostLbl">Cobertura</span>
+        <div class="swatches" id="frostSw" role="group" aria-labelledby="frostLbl"></div>
+      </div>
+      <div class="field">
+        <span class="lbl" id="decorLbl">Decoración</span>
+        <div class="seg" id="decorSeg" role="group" aria-labelledby="decorLbl"></div>
+      </div>
     </div>
     <div class="row">
-      <button class="btn primary" id="nameSave" type="button">Guardar nombre</button>
+      <button class="btn primary" id="ownerSave" type="button">Guardar cambios</button>
       <button class="btn" id="ownerExit" type="button">Salir del modo organizador</button>
     </div>
+    <p class="status" id="ownerStatus" role="status"></p>
   </section>
 
-  <header>
-    <p class="eyebrow">Libro de felicitaciones</p>
-    <h1 id="title">¡Feliz cumpleaños!</h1>
-    <p class="lead">Deja un mensaje bonito para que lo lea hoy y lo guarde. Si no encuentras las palabras, el generador te regala unas.</p>
-  </header>
+  <div class="hero">
+    <header>
+      <p class="eyebrow">Libro de felicitaciones</p>
+      <h1 id="title">¡Feliz cumpleaños!</h1>
+      <p class="lead">Deja un mensaje bonito para que lo lea hoy y lo guarde. Si no encuentras las palabras, el generador te regala unas.</p>
+    </header>
+    <figure class="cake-fig">
+      <svg id="cake" class="cake" viewBox="0 0 360 300" role="img" aria-label="Pastel de cumpleaños"></svg>
+      <figcaption><button class="btn" id="blowBtn" type="button">Soplar las velas</button></figcaption>
+    </figure>
+  </div>
 
   <div class="duo">
     <section class="card gen" aria-labelledby="genTitle">
@@ -73,16 +117,6 @@
       <div class="empty" id="wallEmpty">Cargando mensajes…</div>
     </div>
   </section>
-
-  <footer class="foot">
-    <button class="linkbtn" id="adminToggle" type="button">Soy el organizador</button>
-    <form id="adminForm" class="adminform" hidden novalidate>
-      <label for="adminKeyInput" class="sr">Clave de organizador</label>
-      <input type="password" id="adminKeyInput" autocomplete="current-password" placeholder="Clave de organizador">
-      <button class="btn small primary" type="submit">Entrar</button>
-    </form>
-    <p class="status" id="adminStatus" role="status"></p>
-  </footer>
 </div>
 
 <script src="/app.js" defer></script>

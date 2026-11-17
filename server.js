@@ -58,15 +58,15 @@ function createPgStore(url) {
     async remove(id) {
       await pool.query("DELETE FROM messages WHERE id = $1", [id]);
     },
-    async getName() {
-      const r = await pool.query("SELECT value FROM config WHERE key = 'birthday_name'");
+    async getConfig(key) {
+      const r = await pool.query("SELECT value FROM config WHERE key = $1", [key]);
       return r.rows[0] ? r.rows[0].value : "";
     },
-    async setName(v) {
+    async setConfig(key, value) {
       await pool.query(
-        "INSERT INTO config (key, value) VALUES ('birthday_name', $1) " +
+        "INSERT INTO config (key, value) VALUES ($1, $2) " +
           "ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value",
-        [v]
+        [key, value]
       );
     }
   };
@@ -74,7 +74,7 @@ function createPgStore(url) {
 
 function createMemoryStore() {
   const messages = new Map();
-  let name = "";
+  const config = new Map();
   return {
     kind: "memoria (se pierde al reiniciar)",
     async init() {},
@@ -88,8 +88,8 @@ function createMemoryStore() {
     async exists(id) { return messages.has(id); },
     async upsert(id, n, t) { messages.set(id, { id, name: n, text: t, at: Date.now() }); },
     async remove(id) { messages.delete(id); },
-    async getName() { return name; },
-    async setName(v) { name = v; }
+    async getConfig(key) { return config.get(key) || ""; },
+    async setConfig(key, value) { config.set(key, value); }
   };
 }
 
@@ -215,14 +215,42 @@ function cleanText(v) {
     .slice(0, TEXT_MAX);
 }
 
+const SPONGES = ["vainilla", "chocolate", "fresa", "limon"];
+const FROSTINGS = ["rosa", "menta", "lila", "sol", "crema"];
+const DECORS = ["gotas", "chispas", "cerezas", "lisa"];
+const CAKE_DEFAULT = { candles: 5, tiers: 2, sponge: "vainilla", frosting: "rosa", decor: "gotas" };
+
+function clampInt(v, min, max, fallback) {
+  const n = Math.round(Number(v));
+  return Number.isFinite(n) ? Math.min(Math.max(n, min), max) : fallback;
+}
+
+function cleanCake(v) {
+  const c = v && typeof v === "object" && !Array.isArray(v) ? v : {};
+  return {
+    candles: clampInt(c.candles, 0, 50, CAKE_DEFAULT.candles),
+    tiers: clampInt(c.tiers, 1, 3, CAKE_DEFAULT.tiers),
+    sponge: SPONGES.includes(c.sponge) ? c.sponge : CAKE_DEFAULT.sponge,
+    frosting: FROSTINGS.includes(c.frosting) ? c.frosting : CAKE_DEFAULT.frosting,
+    decor: DECORS.includes(c.decor) ? c.decor : CAKE_DEFAULT.decor
+  };
+}
+
+async function loadCake() {
+  const raw = await store.getConfig("cake");
+  if (!raw) return Object.assign({}, CAKE_DEFAULT);
+  try { return cleanCake(JSON.parse(raw)); } catch (e) { return Object.assign({}, CAKE_DEFAULT); }
+}
+
 /* ---------- API ---------- */
 
 async function handleState(req, res) {
   const cid = clientIdOf(req, null);
   const mine = cid ? publicId(cid) : null;
-  const [name, rows] = await Promise.all([store.getName(), store.list()]);
+  const [name, cake, rows] = await Promise.all([store.getConfig("birthday_name"), loadCake(), store.list()]);
   sendJson(res, 200, {
     name,
+    cake,
     messages: rows.map((m) => ({ id: m.id, name: m.name, text: m.text, at: m.at, mine: m.id === mine }))
   });
 }
@@ -259,9 +287,12 @@ async function handleApiPost(req, res, route) {
   if (route.startsWith("/api/admin/")) {
     if (!isAdmin(req)) throw httpError(401, "Clave incorrecta", "unauthorized");
     if (route === "/api/admin/check") return sendJson(res, 200, { ok: true });
-    if (route === "/api/admin/name") {
-      await store.setName(cleanName(body.name));
-      return sendJson(res, 200, { ok: true });
+    if (route === "/api/admin/settings") {
+      const name = cleanName(body.name);
+      const cake = cleanCake(body.cake);
+      await store.setConfig("birthday_name", name);
+      await store.setConfig("cake", JSON.stringify(cake));
+      return sendJson(res, 200, { ok: true, name, cake });
     }
     if (route === "/api/admin/delete") {
       if (typeof body.id !== "string" || !/^[a-f0-9]{32}$/.test(body.id)) {

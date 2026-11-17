@@ -90,16 +90,51 @@ button, input, textarea { font: inherit; color: inherit; }
 
 label { font-weight: 700; font-size: 0.9rem; }
 .field { display: flex; flex-direction: column; gap: 6px; }
-input[type="text"], input[type="password"], textarea {
+input[type="text"], input[type="password"], input[type="number"], textarea {
   width: 100%; background: var(--bg); border: 1.5px solid var(--line); border-radius: 12px; padding: 10px 12px;
 }
 textarea { min-height: 130px; resize: vertical; }
 .counter { align-self: flex-end; font-size: 0.8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
 .status { min-height: 1.4em; margin: 0; font-size: 0.92rem; color: var(--muted); }
 
-/* Organizador */
-.owner { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; background: var(--surface); border: 1px dashed var(--line); border-radius: 14px; padding: 14px; }
-.owner .field { flex: 1 1 260px; }
+/* Barra superior y organizador */
+.topbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: flex-end; min-height: 28px; }
+.topbar .status { flex-basis: 100%; text-align: right; min-height: 0; }
+.owner { display: flex; flex-direction: column; gap: 16px; background: var(--surface); border: 1px dashed var(--line); border-radius: 14px; padding: 18px; }
+.ctl-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr)); gap: 16px; }
+.ctl-grid > * { min-width: 0; }
+.lbl { font-weight: 700; font-size: 0.9rem; }
+.stepper { display: flex; align-items: center; gap: 8px; }
+.stepper input { width: 76px; text-align: center; }
+.stepper button { width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--fg); background: transparent; font-size: 1.2rem; font-weight: 700; cursor: pointer; line-height: 1; }
+.stepper button:hover { background: color-mix(in srgb, var(--fg) 10%, transparent); }
+.seg, .swatches { display: flex; flex-wrap: wrap; gap: 8px; }
+.seg button { border: 1.5px solid var(--line); background: var(--bg); border-radius: 999px; padding: 5px 13px; cursor: pointer; font-weight: 700; font-size: 0.85rem; }
+.seg button[aria-pressed="true"] { border-color: var(--fg); background: var(--fg); color: var(--bg); }
+.sw { width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--line); cursor: pointer; padding: 0; }
+.sw[aria-pressed="true"] { border-color: var(--fg); box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--fg); }
+
+/* Portada con pastel */
+.hero { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 24px; align-items: center; }
+.hero > * { min-width: 0; }
+.cake-fig { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.cake-fig svg { width: 100%; max-width: 400px; height: auto; display: block; }
+.c-shadow { fill: #000; opacity: 0.12; }
+.c-plate { fill: var(--line); }
+.c-sponge { fill: var(--sponge); } .c-sponge-d { fill: var(--sponge-d); }
+.c-frost { fill: var(--frost); } .c-frost-d { fill: var(--frost-d); }
+.c-top { fill: var(--frost); stroke: var(--frost-d); stroke-width: 1; }
+.c-plaque { fill: #FFF8EC; stroke: var(--frost-d); stroke-width: 1.5; }
+.c-plaque-text { fill: #3B2A4A; font-family: var(--font-display); font-weight: 600; text-anchor: middle; }
+.cd-0 { fill: var(--accent); } .cd-1 { fill: var(--sun); } .cd-2 { fill: var(--mint); } .cd-3 { fill: var(--violet); }
+.cherry { fill: #C8102E; } .cherry-hl { fill: #fff; opacity: 0.55; } .stem { fill: none; stroke: #3F7D3A; stroke-width: 1.5; }
+.wick { stroke: #3B2A4A; stroke-width: 1; }
+.glow { fill: #FFD25E; opacity: 0.35; }
+.flame { fill: #FFA726; } .flame-in { fill: #FFE27A; }
+.flame-g { transform-box: fill-box; transform-origin: 50% 100%; animation: flicker 1.1s ease-in-out infinite; transition: opacity 0.35s; }
+@keyframes flicker { 0%, 100% { transform: scale(1, 1) rotate(-1deg); } 50% { transform: scale(0.9, 1.08) rotate(1.5deg); } }
+.cake.out .flame-g { opacity: 0; animation: none; }
+@media (prefers-reduced-motion: reduce) { .flame-g { animation: none; } }
 
 /* Muro */
 .wall-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; }
